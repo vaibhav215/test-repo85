@@ -1,35 +1,34 @@
 pipeline {
-    agent {
-        node{
-        label 'linux-ec2-node'
-        customWorkspace '/home/ec2-user/new-ws'
-    
-        }
-    }
-
-    stages {
-        stage('clean') {
-            steps {
-                sh 'rm -rf /home/ec2-user/new-ws/*'
-             }
-        }
-        stage('copy') {
+    agent {  label 'linux-ec2-node' }
+        stages {
+        stage('---clean---') {
             tools{
-                jdk 'java 1.9.4'
+             maven 'maven 3.6.1'   
             }
             steps {
-                sh 'java -version'
-                sh 'cp /home/ec2-user/jenkins-home/workspace/java-compile/Hello.java  /home/ec2-user/new-ws'
+                sh "mvn clean"
              }
         }
-         stage('compile') {
-             tools{
-                 jdk 'java 1.9.0'
-             }
+        stage('---test---') {
+            tools{
+                maven 'maven 3.8.1'
+            }
             steps {
-                sh 'java -version'
-                sh 'javac Hello.java'
+                sh "mvn test"
              }
+        }
+         stage('---package---') {
+            steps {
+                sh 'mvn package'
+             }
+        }
+    }
+    post {
+        success{
+            echo 'job was built successfully'
+        }
+        failure{
+        echo 'job was not built..it was failed'
         }
     }
 }
