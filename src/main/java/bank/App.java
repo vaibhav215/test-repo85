@@ -8,6 +8,6 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "test commit for web-hook" );
+        System.out.println( "test commit for CICD web-hook" );
     }
 }
